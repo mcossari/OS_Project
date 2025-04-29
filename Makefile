@@ -1,4 +1,4 @@
-C_FILES=./kernel.c ./console/console.c
+C_FILES=./kernel.c ./console/console.c ./device/keyboard/keyboard.c ./device/portmap/portmap.c
 
 O_FILES=${C_FILES:.c=.o}
 
