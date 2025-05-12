@@ -1,6 +1,5 @@
 #include "console.h"
 #include "keyboard.h"
-#include "portmap.h"
 
 void main() {
 

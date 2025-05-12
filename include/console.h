@@ -62,6 +62,4 @@ void set_terminal_font_color(VGA_Color col);
 
 void set_terminal_background_color(VGA_Color col);
 
-void update_cursor();
-
 #endif

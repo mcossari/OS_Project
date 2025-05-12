@@ -1,5 +1,4 @@
 #include "console.h"
-#include "keyboard.h"
 #include "portmap.h"
 
 char* const VGA_BUFFER =(char*) 0xb8000;
@@ -16,11 +15,26 @@ static VGA_Color terminal_background_color = BLACK; // Default background color 
 
 static int terminal_position = 0;
 
+void update_cursor() {
+
+     uint16_t cursor_position = terminal_position >> 1;
+
+     outb(0x3D4, 0x0F);
+
+     outb(0x3D5, (uint8_t) (cursor_position));
+
+     outb(0x3D4, 0x0E);
+
+     outb(0x3D5, (uint8_t) (cursor_position >> 8));
+
+}
+
+
 void clear_terminal() {
 
 	terminal_position = 0;
 
-	for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT * VGA_BYTES_PER_CHARACTER; i+=2) {
+	for (int i = 0; i < VGA_WIDTH * VGA_HEIGHT * VGA_BYTES_PER_CHARACTER; i+=VGA_BYTES_PER_CHARACTER) {
 		VGA_BUFFER[i]= 0;
         	VGA_BUFFER[i+1] = 0x07;
     	}
@@ -54,7 +68,7 @@ void print_character_with_color(char c, VGA_Color bg_color, VGA_Color font_color
         else {
                 VGA_BUFFER[terminal_position] = c;
                 VGA_BUFFER[terminal_position + 1] = color;
-                terminal_position += 2;
+                terminal_position += VGA_BYTES_PER_CHARACTER;
         }
 
 	update_cursor();
@@ -83,18 +97,3 @@ void set_terminal_background_color(VGA_Color col) {
 
      terminal_background_color = col;
 }
-
-void update_cursor() {
-
-     uint16_t cursor_position = terminal_position >> 1;
-
-     outb(0x3D4, 0x0F);
-
-     outb(0x3D5, (uint8_t) (cursor_position));
-
-     outb(0x3D4, 0x0E);
-
-     outb(0x3D5, (uint8_t) (cursor_position >> 8));
-
-}
-
